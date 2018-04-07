@@ -2,46 +2,59 @@ class SpaceShip
 {
   int x; 
   int y; 
+  int w = 100;
   int x_speed = 10;
   boolean left, right, up, down;
   boolean shoot = false; 
-
+  ArrayList<projectiles> pjt = new ArrayList<projectiles>();
+ 
+  projectiles[] pjtList = new projectiles[10];
+  int pjtTracker;
+ 
    SpaceShip()
   {
     x = 100;
     y = 50; 
+    for (int i = 0; i < 10; i++) pjtList[0] = new projectiles(0, 0);
+    pjtTracker = 0;
   }
   
   void show()
   {
-    fill(51, 20, 45);
+    fill(65, 105, 225);
     noStroke(); 
-    ellipse(x, y, 50, 50); 
+    rect(x, y, w, 50); 
+    fill(0);
+    rect(x+w-20, y+40-2, 25, 10);
     
-    if (shoot == true)
-    {
-      rect(x, y, 10, 100); 
-    }
   }
   void update()
   { 
-    /*
-    x+=x_speed; 
-    if (x >= width || x <=0)
-    {
-      x_speed*=-1;
-    }*/
     if (left) x-=x_speed;
     else if (right) x+=x_speed;
     
     if (up) y-=x_speed;
     else if (down) y+=x_speed;
     
+    if (!pjt.isEmpty()){
+      for (projectiles p : pjt){
+        p.show();
+        p.update();
+      }
+      if (pjt.get(0).getX() > width) pjt.remove(0);
+      println("size = " + pjt.size()); //->Does indeed remove them
+    }
   }
   
-  void shoot(boolean val)
+  void shoot()
   {
-    shoot = val; 
+    if (pjtTracker == 10) {
+        pjtTracker = 0;
+    }
+    pjtList[pjtTracker] = new projectiles(x+w+5, y+40+5-1);
+    pjt.add(pjtList[pjtTracker]);
+    pjtTracker++;
+    shoot = true;
   }
   
   void leftDown(){
